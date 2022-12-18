@@ -33,4 +33,16 @@ public class Day5Parser
         return input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
             .Where(x => x.StartsWith("move"));
     }
+
+    public static IEnumerable<string> SplitMultiMoves(string input)
+    {
+        var m = input.Split(" ");
+
+        var quantity = int.Parse(m[1]);
+        var sourceStack = int.Parse(m[3]);
+        var targetStack = int.Parse(m[5]);
+
+        return Enumerable.Range(1, quantity).Select(y => $"move 1 from {sourceStack} to {targetStack}");
+
+    }
 }

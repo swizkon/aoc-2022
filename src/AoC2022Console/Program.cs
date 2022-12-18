@@ -46,10 +46,32 @@ Console.WriteLine("top3: " + top3);
 // Console.WriteLine("Score: " + result.Sum(x => x.Score));
 
 
-
-using System;
+using AoC2022;
 using AoC2022.Day5;
 
+var day8 = File.ReadAllText("Day08.txt");
+
+/*
+day8 = @"30373
+25512
+65332
+33549
+35390";
+*/
+
+var day8Result = Day8Solver.CountVisibleTrees(day8);
+Console.WriteLine($"Day 8: {day8Result}");
+
+Environment.Exit(0);
+
+var day7 = File.ReadAllText("Day07.txt");
+var day7Result = Day7Solver.CalculateSize(day7);
+Console.WriteLine( day7Result);
+
+Environment.Exit(0);
+/*
+*/
+    
 Console.Clear();
 
 var fadeOutColors = new[]
@@ -79,11 +101,22 @@ var fadeInColors = new[]
 var inout = File.ReadAllText("Day05.txt");
 
 var state = Day5Parser.ParseInput(inout);
+
+Day5Animator.DrawFrame(state, 40);
+
 var moves = Day5Parser.ParseMoves(inout);
 
+// var maxCrates = 40;
 foreach (var move in moves)
 {
-    state = state.ApplyMove(move);
+    Console.SetCursorPosition(1, 1);
+    Console.Write(move);
+    var submoves = Day5Parser.SplitMultiMoves(move);
+
+    foreach (var m in submoves)
+        state = state.ApplyMove(m);
+
+    // maxCrates = Math.Max(maxCrates, state.Stacks.Max(x => x.Crates.Length));
 }
 
 
@@ -109,62 +142,6 @@ var start = @"
 //Console.CursorSize = 1;
 Console.CursorVisible = false;
 
-for (var i = 0; i < 10; i++)
-{
-    // Console.Clear();
-    Console.SetCursorPosition(0, 0);
-    Console.ForegroundColor = ConsoleColor.White;
-    Console.WriteLine(start);
-    foreach (var consoleColor in fadeOutColors)
-    {
-        Console.ForegroundColor = consoleColor;
-        //Console.SetCursorPosition(0, 0);
-        //Console.WriteLine(start);
-
-        Console.SetCursorPosition(1,1);
-        Console.Write("[a]");
-
-        Thread.Sleep(frame);
-        // Console.Write("[a][b][c][d][e][f]");
-    }
-
-    foreach (var fadeInColor in fadeInColors)
-    {
-        Console.ForegroundColor = fadeInColor;
-        Console.SetCursorPosition(9, 3);
-        Console.Write("[a]");
-        Thread.Sleep(frame);
-    }
-
-
-
-    Thread.Sleep(frame);
-    Thread.Sleep(frame);
-
-
-    foreach (var consoleColor in fadeOutColors)
-    {
-        Console.ForegroundColor = consoleColor;
-        Console.SetCursorPosition(1, 2);
-        Console.Write("[b]");
-        Thread.Sleep(frame);
-    }
-
-    foreach (var fadeInColor in fadeInColors)
-    {
-        Console.ForegroundColor = fadeInColor;
-        Console.SetCursorPosition(9, 2);
-        Console.Write("[b]");
-        Thread.Sleep(frame);
-    }
-
-
-    Thread.Sleep(frame);
-    Thread.Sleep(frame);
-}
-
-
-Console.WriteLine(" ");
 
 /*
 var result = RockPaperScissors.CalculateScoreAndOutcome(data);
