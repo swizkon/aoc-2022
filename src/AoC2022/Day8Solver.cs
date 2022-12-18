@@ -58,14 +58,10 @@ public class Day8Solver
     {
         var position = entry.Key;
 
-        //// Edge
-        //if (position.X == 0 || position.Y == 0)
-        //    return true;
-        
-        // right / bottom Edge
+        // Edges
         if (position.X == 0 || position.Y == 0 ||
-            !map.ContainsKey(new Point(x: position.X, y: position.Y + 1)) ||
-            !map.ContainsKey(new Point(x: position.X + 1, y: position.Y)))
+            !map.ContainsKey(position with { Y = position.Y + 1 }) ||
+            !map.ContainsKey(position with { X = position.X + 1 }))
             return true;
 
         // Check if all lefties are shorter....
