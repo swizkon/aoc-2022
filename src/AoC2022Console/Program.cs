@@ -49,28 +49,31 @@ Console.WriteLine("top3: " + top3);
 using AoC2022;
 using AoC2022.Day5;
 
+/*
 var day8 = File.ReadAllText("Day08.txt");
 
-/*
 day8 = @"30373
 25512
 65332
 33549
 35390";
-*/
 
 var day8Result = Day8Solver.CountVisibleTrees(day8);
 Console.WriteLine($"Day 8: {day8Result}");
 
 Environment.Exit(0);
 
+*/
+
 var day7 = File.ReadAllText("Day07.txt");
 var day7Result = Day7Solver.CalculateSize(day7);
 Console.WriteLine( day7Result);
 
+
+var day7BResult = Day7Solver.CalculateFolderSizeToDelete(day7);
+Console.WriteLine(day7BResult);
+
 Environment.Exit(0);
-/*
-*/
     
 Console.Clear();
 

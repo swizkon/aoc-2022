@@ -10,7 +10,7 @@ public class Day7SolverTests
     {
         var s = Day7Solver.CalculateFolderSizes(input);
 
-        s.First().TotalSize.Should().Be(48381165);
+        s.First(x => x.Name == "root").TotalSize.Should().Be(48381165);
     }
 
     [Fact]
@@ -18,7 +18,23 @@ public class Day7SolverTests
     {
         var s = Day7Solver.CalculateFolderSizes(input);
 
-        s.ElementAt(3).TotalSize.Should().Be(24933642);
+        s.First(x => x.Name == "a").TotalSize.Should().Be(94853);
+    }
+
+    [Fact]
+    public void It_should_calculate_folder_size_for_d()
+    {
+        var s = Day7Solver.CalculateFolderSizes(input);
+
+        s.First(x => x.Name == "d").TotalSize.Should().Be(24933642);
+    }
+
+    [Fact]
+    public void It_should_calculate_folder_size_for_e()
+    {
+        var s = Day7Solver.CalculateFolderSizes(input);
+
+        s.First(x => x.Name == "e").TotalSize.Should().Be(584);
     }
 
     [Fact]
@@ -29,7 +45,15 @@ public class Day7SolverTests
         s.Should().Be(95437);
     }
     
-    
+    [Fact]
+    public void It_should_select_correct_folder_to_delete()
+    {
+        var s = Day7Solver.CalculateFolderSizeToDelete(input);
+
+        s.Should().Be(24933642);
+    }
+
+
     private string input = @"$ cd /
 $ ls
 dir a
