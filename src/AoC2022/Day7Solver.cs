@@ -2,16 +2,11 @@
 
 public class Day7Solver
 {
-    public class FileInfo
-    {
-        public int FileSize { get; set; }
-    }
-
     public class FolderInfo
     {
         public string Name { get; set; }
 
-        public List<FileInfo> Files { get; set; } = new List<FileInfo>();
+        public List<int> FileSizes { get; set; } = new List<int>();
 
         public List<FolderInfo> SubFolders { get; set; } = new List<FolderInfo>();
 
@@ -19,8 +14,7 @@ public class Day7Solver
 
         public int GetSize()
         {
-            return SubFolders.Sum(s => s.GetSize()) +  Files.Sum(f => f.FileSize);
-
+            return SubFolders.Sum(s => s.GetSize()) +  FileSizes.Sum(f => f);
         }
 
         public IEnumerable<FolderSize> GetSizes()
@@ -42,27 +36,21 @@ public class Day7Solver
         public string Name { get; set; }
     }
 
-
-    public static int CalculateSize(string input)
-    {
-        var data2 = GetFolderAndFileSizes(input);
-
-        var calcResult = data2.SelectMany(d => d.GetSizes());
-
-        // return calcResult.Max(x => x.TotalSize);
-
-        return calcResult.Where(x => x.TotalSize < 100000).Sum(x => x.TotalSize);
-    }
-
+    public static int CalculateSize(string input) =>
+        GetFolderAndFileSizes(input)
+            .SelectMany(d => d.GetSizes())
+            .Where(x => x.TotalSize < 100000)
+            .Sum(x => x.TotalSize);
 
 
     public static int CalculateFolderSizeToDelete(string input)
     {
-        var data2 = GetFolderAndFileSizes(input);
-        var calcResult = data2.SelectMany(d => d.GetSizes()).ToList();
+        var calcResult = GetFolderAndFileSizes(input)
+            .SelectMany(d => d.GetSizes())
+            .ToList();
 
-        var totalSpace = 70000000;
-        var requiredFreeSpace = 30000000;
+        const int totalSpace = 70000000;
+        const int requiredFreeSpace = 30000000;
 
         var freeSpace = totalSpace - calcResult.Max(x => x.TotalSize);
 
@@ -75,9 +63,8 @@ public class Day7Solver
 
         return data2.SelectMany(d => d.GetSizes()).ToList();
     }
-
-
-    private static IList<FolderInfo> GetFolderAndFileSizes(string input)
+    
+    private static IEnumerable<FolderInfo> GetFolderAndFileSizes(string input)
     {
         var data = input.Split(Environment.NewLine)
             .Where(x => x != "$ ls")
@@ -126,10 +113,7 @@ public class Day7Solver
             var p = d.Split(' ');
             if (int.TryParse(p[0], out var fileSize))
             {
-                currentFolder.Files.Add(new FileInfo
-                {
-                    FileSize = fileSize
-                });
+                currentFolder.FileSizes.Add(fileSize);
             }
         }
 
