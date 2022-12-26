@@ -49,20 +49,34 @@ Console.WriteLine("top3: " + top3);
 using AoC2022;
 using AoC2022.Day5;
 
-/*
+var day9 = File.ReadAllText("Day09.txt");
+
+var day9Result = Day9Solver.CountVisitedPositions(day9);
+Console.WriteLine($"Day 9: {day9Result}");
+
+Environment.Exit(0);
+
+
+
 var day8 = File.ReadAllText("Day08.txt");
 
-day8 = @"30373
-25512
-65332
-33549
-35390";
+//day8 = @"30373
+//25512
+//65332
+//33549
+//35390";
 
-var day8Result = Day8Solver.CountVisibleTrees(day8);
+//var day8Result = Day8Solver.CountVisibleTrees(day8);
+//Console.WriteLine($"Day 8: {day8Result}");
+
+
+
+var day8Result = Day8Solver.FindMaximumScenicScore(day8);
 Console.WriteLine($"Day 8: {day8Result}");
 
 Environment.Exit(0);
 
+/*
 */
 
 var day7 = File.ReadAllText("Day07.txt");
