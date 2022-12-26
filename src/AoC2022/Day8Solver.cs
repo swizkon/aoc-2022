@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Net;
 
 namespace AoC2022;
 
@@ -9,6 +10,8 @@ public class Day8Solver
         public Point Position { get; set; }
         public bool Visible { get; set; }
         public int Height { get; set; }
+
+        public int ScenicScore { get; set; }
     }
     
     public static int CountVisibleTrees(string input)
@@ -18,13 +21,16 @@ public class Day8Solver
         return data.Count(t => t.Visible);
     }
 
-    private static IEnumerable<TreeItem> ParseTreeMap(string input)
+
+    public static int FindMaximumScenicScore(string input)
     {
-        var lines = input.Split(Environment.NewLine);
-        
-        var width = lines.First().Length;
-        var height = lines.Length;
-        
+        var data = ParseTreeMap(input);
+
+        return data.Max(t => t.ScenicScore);
+    }
+
+    public static IDictionary<Point, int> ParseInput(string input)
+    {
         IDictionary<Point, int> map = new Dictionary<Point, int>();
 
         int x = 0, y = 0;
@@ -41,27 +47,90 @@ public class Day8Solver
             x += 1;
         }
 
+        return map;
+    }
+
+    private static IEnumerable<TreeItem> ParseTreeMap(string input)
+    {
+        var map = ParseInput(input);
         foreach (var entry in map)
         {
             var item = new TreeItem
             {
                 Height = entry.Value,
                 Position = entry.Key,
-                Visible = IsVisible(entry, map)
+                Visible = IsVisible(entry, map),
+                ScenicScore = GetScenicScore(entry, map)
             };
 
             yield return item;
         }
     }
 
-    private static bool IsVisible(KeyValuePair<Point, int> entry, IDictionary<Point, int> map)
+    public static int GetScenicScore(KeyValuePair<Point, int> entry, IDictionary<Point, int> map)
     {
         var position = entry.Key;
 
+        if (IsEdgeTree(map, position))
+            return 0;
+        
+        int up = 0, down = 0, left = 0, right = 0;
+        
+        var checkPoint = position with{X = position.X + 1};
+        while (map.ContainsKey(checkPoint) && map[checkPoint] < entry.Value)
+        {
+            right++;
+            checkPoint = checkPoint with { X = checkPoint.X + 1 };
+        }
+        if (map.ContainsKey(checkPoint) && checkPoint != position && map[checkPoint] >= entry.Value)
+        {
+            right++;
+        }
+
+        checkPoint = position  with { X = position.X - 1 };
+        while (map.ContainsKey(checkPoint) && map[checkPoint] < entry.Value)
+        {
+            left++;
+            checkPoint = checkPoint with { X = checkPoint.X - 1 };
+        }
+        if (map.ContainsKey(checkPoint) && checkPoint != position && map[checkPoint] >= entry.Value)
+        {
+            left++;
+        }
+
+        checkPoint = position with { Y = position.Y - 1 };
+        while (map.ContainsKey(checkPoint) && map[checkPoint] < entry.Value)
+        {
+            up++;
+            checkPoint = checkPoint with { Y = checkPoint.Y - 1 };
+        }
+        if (map.ContainsKey(checkPoint) && checkPoint != position && map[checkPoint] >= entry.Value)
+        {
+            up++;
+        }
+
+        checkPoint = position with { Y = position.Y + 1 };
+        while (map.ContainsKey(checkPoint) && map[checkPoint] < entry.Value)
+        {
+            down++;
+            checkPoint = checkPoint with { Y = checkPoint.Y + 1 };
+        }
+        if (map.ContainsKey(checkPoint) && checkPoint != position && map[checkPoint] >= entry.Value)
+        {
+            down++;
+        }
+
+        var result = up * down * left * right;
+
+        return result;
+    }
+
+    private static bool IsVisible(KeyValuePair<Point, int> entry, IDictionary<Point, int> map)
+    {
+        var position = entry.Key;
+        
         // Edges
-        if (position.X == 0 || position.Y == 0 ||
-            !map.ContainsKey(position with { Y = position.Y + 1 }) ||
-            !map.ContainsKey(position with { X = position.X + 1 }))
+        if (IsEdgeTree(map, position))
             return true;
 
         // Check if all lefties are shorter....
@@ -88,5 +157,12 @@ public class Day8Solver
 
 
         return false;
+    }
+
+    private static bool IsEdgeTree(IDictionary<Point, int> map, Point position)
+    {
+        return position.X == 0 || position.Y == 0 ||
+               !map.ContainsKey(position with { Y = position.Y + 1 }) ||
+               !map.ContainsKey(position with { X = position.X + 1 });
     }
 }
